@@ -5,6 +5,7 @@ module.exports = app => {
             version: "1.0.0",
             _links: {
                 self: {href: [req.protocol, "://", req.headers.host, '/'].join('')},
+                products:  {href: [req.protocol, "://", req.headers.host, '/products'].join('')},
             }
         })
     }
