@@ -8,6 +8,7 @@ app.mongoose = require('mongoose')
 
 consign()
     .include('./config/middlewares.js')
+    .then('./config/utils.js')
     .then('./api')
     .then('./config/routes.js')
     .then('./config')
