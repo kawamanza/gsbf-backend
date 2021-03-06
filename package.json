@@ -12,6 +12,7 @@
   "dependencies": {
     "consign": "^0.1.6",
     "express": "^4.17.1",
+    "mongoose": "^5.11.19",
     "morgan": "^1.10.0",
     "querystring": "^0.2.1"
   },
