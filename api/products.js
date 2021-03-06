@@ -15,7 +15,7 @@ module.exports = app => {
         return [req.protocol, "://", req.headers.host, path, queryString].join('')
     }
 
-    function resourceInfo(req, path, {next, limit, page}) {
+    function resourceInfo(req, path, {next, limit, page, parent}) {
         const query = {...req.query, limit, page}
         const queryString = (Object.keys(req.query).length ? "?" + qs.stringify(query) : "")
         
@@ -23,6 +23,7 @@ module.exports = app => {
             _links: {
                 root: {href: [req.protocol, "://", req.headers.host, '/'].join('')},
                 entrypoint: queryString ? {href: linkUrl(req, path, {})} : void(0),
+                parent: parent ?  {href: linkUrl(req, path.replace(/\/[^\/]+$/, ''), {})} : void(0),
                 self:  {href: [req.protocol, "://", req.headers.host, path, queryString].join('')},
                 next: next ? {href: linkUrl(req, path, {...query, page: query.page + 1})} : void(0),
                 prev: page > 0 ? {href: linkUrl(req, path, {...query, page: query.page - 1})} : void(0),
@@ -87,6 +88,23 @@ module.exports = app => {
         }
     }
 
+    async function detail(req, res) {
+        const product = await Product.findOne({_id: req.params.id})
+        res.json({
+            id: product.id,
+            ...product._doc,
+            _id: void(0),
+            __v: void(0),
+            ...resourceInfo(req, '/products/'+product.id, {parent: true}),
+            _meta: {
+                prices: {
+                    ...priceCurrencies(product._doc),
+                    [product.currency]: void(0),
+                },
+            }
+        })
+    }
+
     function entrypoint(req, res) {
         if (Object.keys(req.query).length) {
             list(req, res)
@@ -97,5 +115,5 @@ module.exports = app => {
             })
         }
     }
-    return { entrypoint, create }
+    return { entrypoint, create, detail }
 }
