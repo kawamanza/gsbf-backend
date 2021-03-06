@@ -1,30 +1,76 @@
 const qs = require("querystring")
 
 module.exports = app => {
+    const CURRENCIES = ['BRL', 'USD', 'EUR', 'INR']
     const Product = app.mongoose.model('Product', {
         title: {type: String, required: [true, 'Title required']},
         price: {type: Number, required: [true, 'Price required'], min: [0.01, 'Price invalid']},
         promo_price: {type: Number, min: [0.01, 'Promo Price invalid']},
-        currency: {type: String, required: [true, 'Currency required'], enum: ['BRL', 'USD', 'EUR', 'INR']},
+        currency: {type: String, required: [true, 'Currency required'], enum: CURRENCIES},
     }, 'products')
 
-    function resourceInfo(req) {
-        const query = (Object.keys(req.query).length ? "?" : "") + qs.stringify(req.query)
+
+    function linkUrl(req, path, query) {
+        const queryString = (Object.keys(query).length ? "?" + qs.stringify(query) : "")
+        return [req.protocol, "://", req.headers.host, path, queryString].join('')
+    }
+
+    function resourceInfo(req, path, {next, limit, page}) {
+        const query = {...req.query, limit, page}
+        const queryString = (Object.keys(req.query).length ? "?" + qs.stringify(query) : "")
+        
         return ({
-            title: "Products Entrypoint",
             _links: {
-                parent: {href: [req.protocol, "://", req.headers.host, '/'].join('')},
-                self:  {href: [req.protocol, "://", req.headers.host, '/products', query].join('')},
+                root: {href: [req.protocol, "://", req.headers.host, '/'].join('')},
+                entrypoint: queryString ? {href: linkUrl(req, path, {})} : void(0),
+                self:  {href: [req.protocol, "://", req.headers.host, path, queryString].join('')},
+                next: next ? {href: linkUrl(req, path, {...query, page: query.page + 1})} : void(0),
+                prev: page > 0 ? {href: linkUrl(req, path, {...query, page: query.page - 1})} : void(0),
             }
         })
     }
 
+    function priceCurrencies({currency, price, promo_price}) {
+        const prices = {
+            [currency]: { price, promo_price }
+        }
+        const defaultQuote = app.config.currencylayer.quotes['USD' + currency]
+        for (let curr of CURRENCIES) {
+            if (curr !== currency) {
+                const quote = app.config.currencylayer.quotes['USD' + curr]
+                prices[curr] = {
+                    price: Math.round(price / defaultQuote * quote * 100) / 100
+                }
+                if (promo_price) {
+                    prices[curr].promo_price = Math.round(promo_price / defaultQuote * quote * 100) / 100
+                }
+            }
+        }
+        return prices
+    }
+
+    function productListResponse(product) {
+        const req = this
+        const {_id: id, title} = product._doc
+        return {
+            id,
+            title,
+            prices: priceCurrencies(product._doc),
+            _links: {
+                product: {href: [req.protocol, "://", req.headers.host, '/products/', product._id].join('')}
+            }
+        }
+    }
+
     async function list(req, res) {
-        const all = []
+        const limit = Math.min(Math.max(1, parseInt(req.query.limit) || 10), 50)
+        const page = Math.max(0, parseInt(req.query.page) || 0)
+        const title = new RegExp((req.query.q || '.*'))
+        const all = await Product.find({ title }).limit(limit + 1).skip(page * limit)
         res.json({
-            ...resourceInfo(req),
             title: "Products",
-            objects: all,
+            ...resourceInfo(req, '/products', {limit, page, next: all.length > limit}),
+            objects: all.slice(0, 10).map(productListResponse.bind(req)),
         })
     }
 
@@ -45,7 +91,10 @@ module.exports = app => {
         if (Object.keys(req.query).length) {
             list(req, res)
         } else {
-            res.json(resourceInfo(req))
+            res.json({
+                title: 'Products Entrypoint',
+                ...resourceInfo(req, '/products', {}),
+            })
         }
     }
     return { entrypoint, create }
