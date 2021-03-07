@@ -41,7 +41,7 @@ module.exports = app => {
             _meta: {
                 prices: {
                     ...priceCurrencies(product._doc),
-                    [currency]: void(0),
+                    [currency]: void(0),    // suprimindo atributo
                 },
             },
         }
@@ -77,13 +77,13 @@ module.exports = app => {
         res.json({
             id: product.id,
             ...product._doc,
-            _id: void(0),
-            __v: void(0),
+            _id: void(0),   // suprimindo atributo
+            __v: void(0),   // suprimindo atributo
             ...resourceInfo(req, '/products/'+product.id, {parent: true}),
             _meta: {
                 prices: {
                     ...priceCurrencies(product._doc),
-                    [product.currency]: void(0),
+                    [product.currency]: void(0),    // suprimindo atributo
                 },
             }
         })
