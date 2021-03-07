@@ -31,14 +31,19 @@ module.exports = app => {
 
     function productListResponse(product) {
         const req = this
-        const {_id: id, title} = product._doc
+        const {_id: id, title, currency, price, promo_price} = product._doc
         return {
-            id,
-            title,
-            prices: priceCurrencies(product._doc),
+            id, title,
+            currency, price, promo_price,
             _links: {
-                product: {href: [req.protocol, "://", req.headers.host, '/products/', product._id].join('')}
-            }
+                product: {href: linkUrl(req, '/products/'+product._id, {})}
+            },
+            _meta: {
+                prices: {
+                    ...priceCurrencies(product._doc),
+                    [currency]: void(0),
+                },
+            },
         }
     }
 
