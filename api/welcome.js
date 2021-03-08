@@ -1,11 +1,13 @@
 module.exports = app => {
+    const { linkUrl } = app.config.utils
+
     function root(req, res) {
         res.json({
             title: "GSBF API",
             version: "1.0.0",
             _links: {
-                self: {href: [req.protocol, "://", req.headers.host, '/'].join('')},
-                products:  {href: [req.protocol, "://", req.headers.host, '/products'].join('')},
+                self: {href: linkUrl(req, '/', {})},
+                products:  {href: linkUrl(req, '/products', {})},
             }
         })
     }
