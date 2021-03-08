@@ -2,7 +2,7 @@
 module.exports = app => {
     const CURRENCIES = ['BRL', 'USD', 'EUR', 'INR']
     const Product = app.mongoose.model('Product', {
-        title: {type: String, required: [true, 'Title required']},
+        title: {type: String, required: [true, 'Title required'], unique: true},
         price: {type: Number, required: [true, 'Price required'], min: [0.01, 'Price invalid']},
         promo_price: {type: Number, min: [0.01, 'Promo Price invalid']},
         currency: {type: String, required: [true, 'Currency required'], enum: CURRENCIES},
