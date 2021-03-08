@@ -1,3 +1,6 @@
+const axios = require('axios')
+const fs = require('fs')
+const path = require('path')
 const qs = require("querystring")
 
 module.exports = app => {
@@ -21,5 +24,16 @@ module.exports = app => {
             }
         })
     }
-    return { linkUrl, resourceInfo }
+
+    async function refreshCurrencies(token) {
+        const url = `http://api.currencylayer.com/live?access_key=${token}&format=1`
+        const result = await axios.get(url)
+        app.config.currencylayer = result.data
+        setTimeout(() => {
+            const currency_filepath = path.resolve(__dirname + '/../config/currencylayer.json')
+            fs.writeFileSync(currency_filepath, JSON.stringify(app.config.currencylayer, null, 2))
+        }, 500)
+    }
+
+    return { linkUrl, resourceInfo, refreshCurrencies }
 }

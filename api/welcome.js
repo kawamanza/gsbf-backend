@@ -1,9 +1,5 @@
-const axios = require('axios')
-const fs = require('fs')
-const path = require('path')
-
 module.exports = app => {
-    const { linkUrl } = app.config.utils
+    const { linkUrl, refreshCurrencies } = app.config.utils
 
     function root(req, res) {
         res.json({
@@ -14,16 +10,6 @@ module.exports = app => {
                 products:  {href: linkUrl(req, '/products', {})},
             }
         })
-    }
-
-    async function refreshCurrencies(token) {
-        const url = `http://api.currencylayer.com/live?access_key=${token}&format=1`
-        const result = await axios.get(url)
-        app.config.currencylayer = result.data
-        setTimeout(() => {
-            const currency_filepath = path.resolve(__dirname + '/../config/currencylayer.json')
-            fs.writeFileSync(currency_filepath, JSON.stringify(app.config.currencylayer, null, 2))
-        }, 500)
     }
 
     async function currencies(req, res) {
