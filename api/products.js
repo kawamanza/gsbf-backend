@@ -72,9 +72,8 @@ module.exports = app => {
         }
     }
 
-    async function detail(req, res) {
-        const product = await Product.findOne({_id: req.params.id})
-        res.json({
+    function resourceDetail(req, product) {
+        return {
             id: product.id,
             ...product._doc,
             _id: void(0),   // suprimindo atributo
@@ -86,7 +85,23 @@ module.exports = app => {
                     [product.currency]: void(0),    // suprimindo atributo
                 },
             }
-        })
+        }
+    }
+
+    async function detail(req, res) {
+        const product = await Product.findOne({_id: req.params.id})
+        res.json(resourceDetail(req, product))
+    }
+
+    async function update(req, res) {
+        try {
+            await new Product(req.body).validate()
+            const product = await Product.findByIdAndUpdate(req.params.id, req.body, {new: true})
+            res.json(resourceDetail(req, product))
+        } catch(e) {
+            res.status(422)
+            res.json(e)
+        }
     }
 
     function entrypoint(req, res) {
@@ -99,5 +114,5 @@ module.exports = app => {
             })
         }
     }
-    return { entrypoint, create, detail }
+    return { entrypoint, create, detail, update }
 }
