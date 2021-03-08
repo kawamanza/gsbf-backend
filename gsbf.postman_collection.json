@@ -1,0 +1,131 @@
+{
+	"id": "a341555c-afdb-7234-078b-909847cf4810",
+	"name": "gsbf",
+	"description": "",
+	"order": [
+		"79101f9c-8968-ef10-abbc-211e45a5c71e",
+		"6ef00c3e-5d13-eacd-b396-cd7758a06db6",
+		"e18fec7e-b10f-0230-a627-475332442090",
+		"8cc4dd12-7b27-60f8-81d1-b5094650a837"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 1615035310724,
+	"owner": 0,
+	"public": false,
+	"requests": [
+		{
+			"id": "6ef00c3e-5d13-eacd-b396-cd7758a06db6",
+			"headers": "Content-Type: application/hal+json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/hal+json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:3000/products",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1615177219794,
+			"name": "Create Product",
+			"description": "",
+			"collectionId": "a341555c-afdb-7234-078b-909847cf4810",
+			"responses": [],
+			"rawModeData": "{\n\t\"currency\": \"BRL\",\n\t\"price\": 749.99,\n\t\"promo_price\": 529.99,\n\t\"title\": \"Tênis Nike Shox R4 - Masculino\"\n}\n"
+		},
+		{
+			"id": "79101f9c-8968-ef10-abbc-211e45a5c71e",
+			"headers": "",
+			"headerData": [],
+			"url": "http://localhost:3000/products?q=Nike",
+			"queryParams": [
+				{
+					"key": "q",
+					"value": "Nike",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1615176953675,
+			"name": "List Products",
+			"description": "",
+			"collectionId": "a341555c-afdb-7234-078b-909847cf4810",
+			"responses": []
+		},
+		{
+			"id": "8cc4dd12-7b27-60f8-81d1-b5094650a837",
+			"headers": "",
+			"headerData": [],
+			"url": "http://localhost:3000/currencies?token=ab52e4a2a6ebd5462c96a1872402c3b1",
+			"queryParams": [
+				{
+					"key": "token",
+					"value": "ab52e4a2a6ebd5462c96a1872402c3b1",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "GET",
+			"collectionId": "a341555c-afdb-7234-078b-909847cf4810",
+			"data": null,
+			"dataMode": "params",
+			"name": "Refresh Currency Layer",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1615177366854,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {}
+		},
+		{
+			"id": "e18fec7e-b10f-0230-a627-475332442090",
+			"headers": "",
+			"headerData": [],
+			"url": "http://localhost:3000/currencies",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "GET",
+			"collectionId": "a341555c-afdb-7234-078b-909847cf4810",
+			"data": null,
+			"dataMode": "params",
+			"name": "Currency Layer",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1615177313940,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {}
+		}
+	]
+}
