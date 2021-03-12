@@ -3,8 +3,8 @@
 ## Preparação
 
 Instalar as dependências do projeto.
-Requer instalação prévia de [Node JS](https://nodejs.org/en/download/) (~> v12.19.0) e
-[Yarn](https://classic.yarnpkg.com/en/docs/install/) (~> v1.22.5).
+Requer instalação prévia de [Node JS](https://nodejs.org/en/download/) (\~> v12.19.0) e
+[Yarn](https://classic.yarnpkg.com/en/docs/install/) (\~> v1.22.5).
 
 ```shell
 $ yarn install
