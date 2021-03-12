@@ -38,7 +38,8 @@ de navegação nos serviços.
 ### Swagger
 
 Também é possível verificar a documentação do projeto em Swagger, usando o arquivo
-swagger.yaml no [Editor online](https://editor.swagger.io/).
+swagger.yaml no [Editor online](https://editor.swagger.io/). Esta documentação também
+pode ser usada para navegar no serviço caso ele esteja em execução em `localhost:3000`.
 
 ## Conversor de Moedas
 
