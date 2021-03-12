@@ -17,6 +17,12 @@ Requer instalação prévia de [Docker](https://docs.docker.com/engine/install/)
 $ docker run -d -p 27017-27019:27017-27019 mongo
 ```
 
+Para executar o projeto, basta rodar o seguinte comando na pasta raíz:
+
+```shell
+$ yarn start
+```
+
 ## Material adicional e recomendações
 
 É possível verificar as rotas do sistema navegando diretamente pelo Browser de sua
