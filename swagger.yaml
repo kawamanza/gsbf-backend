@@ -1,0 +1,183 @@
+swagger: "2.0"
+info:
+  description: "Case GSBF"
+  version: "1.0.0"
+  title: "Swagger ProductStore"
+host: "localhost:3000"
+basePath: "/"
+tags:
+- name: "services"
+  description: "Miscelanea de serviços"
+- name: "products"
+  description: "Tudo sobre Produtos"
+schemes:
+- "http"
+paths:
+  /products:
+    get:
+      tags:
+      - "products"
+      summary: "Entrypoint e busca de produtos"
+      description: "Lista de produtos"
+      operationId: "findProducts"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "q"
+        in: "query"
+        description: "Busca textual por nome do produto (match em qualquer sequencia de caracteres)"
+        required: false
+        type: "string"
+      - name: "limit"
+        in: "query"
+        description: "Quantidade de produtos exibidos por página"
+        default: 10
+        required: false
+        type: "integer"
+      - name: "page"
+        in: "query"
+        description: "Página do resultado"
+        default: 0
+        required: false
+        type: "integer"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              title:
+                type: string
+                default: Produtos
+              objects:
+                type: array
+                items:
+                  $ref: "#/definitions/Product"
+    post:
+      tags:
+      - "products"
+      summary: "Criação de Produtos"
+      description: ""
+      operationId: "addProduct"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Produto que deseja adicionar"
+        required: true
+        schema:
+          $ref: "#/definitions/Product"
+      responses:
+        "405":
+          description: "Invalid input"
+        "422":
+          description: "Entidade inválida"
+  /products/{productId}:
+    get:
+      tags:
+      - "products"
+      summary: "Detalhes do produto ID"
+      description: "Retorna um produto"
+      operationId: "getProductById"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "productId"
+        in: "path"
+        description: "ID do produto"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "Operação bem sucedida"
+          schema:
+            $ref: "#/definitions/Product"
+        "404":
+          description: "Produto não encontrado"
+    put:
+      tags:
+      - "products"
+      summary: "Atualiza um produto"
+      description: ""
+      operationId: "updateProduct"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "productId"
+        in: "path"
+        description: "ID do produto"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Produto que deseja adicionar"
+        required: true
+        schema:
+          $ref: "#/definitions/Product"
+      responses:
+        "405":
+          description: "Invalid input"
+        "422":
+          description: "Entidade inválida"
+  /currencies:
+    get:
+      tags:
+      - "services"
+      summary: "Layer de conversão de moedas"
+      description: ""
+      operationId: "currencyList"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "token"
+        type: "string"
+        description: "API-Key de integração CurrencyLayer para refresh dos valores"
+        required: false
+      responses:
+        "200":
+          description: "Dados de conversão de moedas"
+          schema:
+            $ref: "#/definitions/CurrencyLayerSample"
+        "302":
+          description: "Refresh bem sucedido"
+definitions:
+  Product:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        default: "6045a5e049889b41fcc4d48e"
+      title:
+        type: "string"
+        default: "Tênis Nike Shox R4 - Masculino"
+      currency:
+        type: "string"
+        default: "BRL"
+      price:
+        type: "number"
+        default: 749.99
+      promo_price:
+        type: "number"
+        default: 528.99
+  CurrencyLayerSample:
+    type: object
+    properties:
+      age:
+        type: integer
+      stale:
+        type: boolean
+        default: false
+      layer:
+        type: object
+        properties:
+          source:
+            type: string
+            default: USD
+          quotes:
+            type: object
