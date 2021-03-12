@@ -7,6 +7,7 @@ module.exports = app => {
             version: "1.0.0",
             _links: {
                 self: {href: linkUrl(req, '/', {})},
+                currencies:  {href: linkUrl(req, '/currencies', {})},
                 products:  {href: linkUrl(req, '/products', {})},
             }
         })
