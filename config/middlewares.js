@@ -1,9 +1,9 @@
 const morgan = require('morgan')
-const bodyParser = require('body-parser')
+const express = require('express')
 var cors = require('cors')
 
 module.exports = app => {
     app.use(morgan('tiny'))
-    app.use(bodyParser.json({type: ['application/*+json', 'application/json']}))
+    app.use(express.json({type: ['application/*+json', 'application/json']}))
     app.use(cors())
 }
